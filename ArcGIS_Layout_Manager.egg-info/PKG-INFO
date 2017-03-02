@@ -1,9 +1,9 @@
 Metadata-Version: 1.0
 Name: ArcGIS-Layout-Manager
-Version: 0.1
+Version: 0.2
 Summary: Helper for supporting multiple layouts in ArcGIS layout view
-Home-page: UNKNOWN
-Author: Cody Scott
+Home-page: https://github.com/namur007/ArcGIS_Layout_Manager
+Author: namur007
 Author-email: UNKNOWN
 License: MIT
 Description: UNKNOWN
