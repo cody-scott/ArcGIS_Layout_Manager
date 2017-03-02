@@ -42,6 +42,27 @@ Using the above example, the file would be called sample_layout.json in the fold
 
 ## Create New Layout
 
-Each layout you would like to use requires a layout to be created. Do this by calling 
+Each layout you would like to use requires a layout to be created.
 
     lm.create_layout("Layout Name")
+
+Each layout name must be unique. To check existing names call
+
+    lm.list_layouts()
+    
+## Changing Layouts
+
+To change between your created layouts call
+
+    lm.switch_layout("Layout Name")
+    
+## Updating Layouts
+
+Once you made one or many changes to a layout within ArcMap, you'll need to update the current layout data.
+For your currently activate layout:
+
+    lm.update_layout()
+    
+For a specific layout
+
+    lm.update_layout("Layout Name")
