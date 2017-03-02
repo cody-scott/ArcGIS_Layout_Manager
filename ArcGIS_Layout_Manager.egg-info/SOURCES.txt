@@ -1,0 +1,11 @@
+setup.py
+ArcGIS_Layout_Manager/LayoutManager.py
+ArcGIS_Layout_Manager/__init__.py
+ArcGIS_Layout_Manager/exceptions.py
+ArcGIS_Layout_Manager/layout_elements.py
+ArcGIS_Layout_Manager/table_of_contents_elements.py
+ArcGIS_Layout_Manager.egg-info/PKG-INFO
+ArcGIS_Layout_Manager.egg-info/SOURCES.txt
+ArcGIS_Layout_Manager.egg-info/dependency_links.txt
+ArcGIS_Layout_Manager.egg-info/not-zip-safe
+ArcGIS_Layout_Manager.egg-info/top_level.txt
