@@ -154,7 +154,7 @@ Export both layouts
         lm.switch_layout(item)
         arcpy.mapping.ExportToJPEG(mxd, r'C:\{}'.format(item))
         
-### Mapbook of Same location with Imagery toggled on and off
+### Two Maps with Imagery layer toggled on and off
 
 create two layouts
 
