@@ -1,3 +1,20 @@
+# About
+This package was created to help with the issues of managing multiple map layouts within a single ArcMap document. 
+As it stands currently, the arcpy.mapping package provides many great tools to manipulate map documents to create map books, and manage multiple layouts, but it is cumbersome to create each time.
+
+The LayoutManager attempts to help this by tracking the location and details of Layout Objects on your map document, as well as table of contents items including if it is turned on/off, and transparency.
+
+The data associated with the LayoutManager is stored in JSON which can be easily changed outside of ArcMap.
+
+Finally, the package is usable from within ArcMap's python window, or incorporated into exernal scripts.
+
+# Use Cases
+
+Some potential uses for this would include creating multiple maps that toggle layers on and off in the table of contents.
+Creating Data Driven pages that require moving items on and off the map layout.
+
+Many More!
+
 # Installation
 ArcGIS installation is required
 
@@ -5,7 +22,7 @@ Install package via pip
 
     pip install ArcGIS_Layout_Manager
     
-Can either install to the global site packages or if you wish to keep in a virtual environment but use arcpy, toggle global site packages on your virtual environment
+To use within ArcMap, install to the global site packages or if you wish to keep in a virtual environment but use arcpy, toggle global site packages on your virtual environment
 
     toggleglobalsitepackages -q
     
@@ -66,3 +83,18 @@ For your currently activate layout:
 For a specific layout
 
     lm.update_layout("Layout Name")
+
+# Properties
+
+The LayoutManager has a number of properties that can be set according to your want and needs
+
+### Auto Save
+Auto Save JSON file when changing to a new layout, updating current layout, or creating new layout.
+    
+    lm.auto_save = True/False
+    
+### Move Missing Off Screen
+If the LayoutManager encounters a new item that you have added to the layout, but have not updated the active layout to include (such as a new text box or scale bar), then you can chose to either keep it in place in the new layout, or move it off screen.
+You can also affix it to a new location and call update_layout() to save its place for future.
+
+    move_missing_off_screen = True/False
