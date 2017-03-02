@@ -22,7 +22,7 @@ ArcGIS installation is required
 
 Install package via pip
 
-    pip install ArcGIS_Layout_Manager
+    pip install ArcGIS-Layout-Manager
     
 To use within ArcMap, install to the global site packages or if you wish to keep in a virtual environment but use arcpy, toggle global site packages on your virtual environment
 
