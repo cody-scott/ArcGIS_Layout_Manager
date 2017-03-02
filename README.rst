@@ -1,2 +1,0 @@
-ArcGIS Layout Manager
-=====================
