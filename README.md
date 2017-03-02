@@ -97,4 +97,19 @@ Auto Save JSON file when changing to a new layout, updating current layout, or c
 If the LayoutManager encounters a new item that you have added to the layout, but have not updated the active layout to include (such as a new text box or scale bar), then you can chose to either keep it in place in the new layout, or move it off screen.
 You can also affix it to a new location and call update_layout() to save its place for future.
 
-    move_missing_off_screen = True/False
+    lm.move_missing_off_screen = True/False
+
+### Table of Contents Active
+Flag if you want the LayoutManager to change your table of contents items when update_layout is called
+
+    lm.toc_active = True/False
+    
+### Layouts Active
+Flag if you want the LayoutManager to change your map layout items when update_layout is called
+
+    lm.lyr_active = True/False
+    
+### Get Active Layout
+Get your currently active layout property
+
+    lm.active_layout
