@@ -4,6 +4,8 @@ As it stands currently, the arcpy.mapping package provides many great tools to m
 
 The LayoutManager attempts to help this by tracking the location and details of Layout Objects on your map document, as well as table of contents items including if it is turned on/off, and transparency.
 
+The intended method is that the layouts are authored within ArcMap manually, then can be easily switched between and updated. Nothing limiting doing by code though.
+
 The data associated with the LayoutManager is stored in JSON which can be easily changed outside of ArcMap.
 
 Finally, the package is usable from within ArcMap's python window, or incorporated into exernal scripts.
@@ -30,24 +32,24 @@ To use within ArcMap, install to the global site packages or if you wish to keep
 # Usage
 
 ## Initialize
-Can function from within ArcMap or within a seperate script
+Can function from within ArcMap or within a separate script
 
 Within ArcMap
 
-    from ArcGIS_LayoutManager import LayoutManager
+    from ArcGIS_Layout_Manager import LayoutManager
     lm = LayoutManager()
 
 From script
 
 Using path to mxd file
 
-    from ArcGIS_LayoutManager import LayoutManager
+    from ArcGIS_Layout_Manager import LayoutManager
     mxd_path = r'C:\sample.mxd'
     lm = LayoutManager(mxd_path=mxd_path)
     
 or using arcpy.mapping.MapDocument class
 
-    from ArcGIS_LayoutManager import LayoutManager
+    from ArcGIS_Layout_Manager import LayoutManager
     mxd = already started arcpy.mapping.MapDocument
     lm = LayoutManage(mxd=mxd)
 
@@ -113,3 +115,61 @@ Flag if you want the LayoutManager to change your map layout items when update_l
 Get your currently active layout property
 
     lm.active_layout
+    
+# Examples
+
+All of these assuming the following
+
+    from ArcGIS_Layout_Manager import LayoutManager
+    mxd = arcpy.mapping.MapDocument(r'C:\sample.mxd')
+    lm = LayoutManager(mxd=mxd)
+
+### Mapbook of two different locations
+
+create two layouts
+
+    lm.create_layout("Layout One")
+    lm.create_layout("Layout Two")
+
+Activate Layout One
+
+    lm.switch_layout("Layout One")
+
+Zoom map to one location
+
+Activate Layout Two
+
+    lm.switch_layout("Layout Two")
+    
+Zoom map to second location
+
+Export both layouts
+
+    for item in lm.list_layouts():
+        lm.switch_layout(item)
+        arcpy.mapping.ExportToJPEG(mxd, r'C:\{}'.format(item))
+        
+### Mapbook of Same location with Imagery toggled on and off
+
+create two layouts
+
+    lm.create_layout("Layout One")
+    lm.create_layout("Layout Two")
+
+Activate Layout One
+
+    lm.switch_layout("Layout One")
+  
+Ensure imagery layer is enabled
+
+Activate Layout Two
+
+    lm.switch_layout("Layout Two")
+    
+disable the imagery layer
+
+Export both layouts
+
+    for item in lm.list_layouts():
+        lm.switch_layout(item)
+        arcpy.mapping.ExportToJPEG(mxd, r'C:\{}'.format(item))
