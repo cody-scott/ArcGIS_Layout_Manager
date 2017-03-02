@@ -86,6 +86,11 @@ For a specific layout
 
     lm.update_layout("Layout Name")
 
+## Saving Layout Manually
+To save JSON manually
+
+    lm.save_layout_json()
+
 # Properties
 
 The LayoutManager has a number of properties that can be set according to your want and needs
@@ -173,3 +178,18 @@ Export both layouts
     for item in lm.list_layouts():
         lm.switch_layout(item)
         arcpy.mapping.ExportToJPEG(mxd, r'C:\{}'.format(item))
+
+
+### Create layout on existing data driven pages map
+
+    idx_lyr = mxd.dataDrivenPages.indexLayer
+    name_field = mxd.dataDrivenPages.pageNameField
+    with arcpy.da.SearchCursor(idx_lyr, name_field.name) as sc:
+        for row in sc:
+            page_name = row[0]
+            page_id = mxd.dataDrivenPages.getPageIDFromName(page_name)
+
+            mxd.dataDrivenPages.currentPageID = page_id
+            arcpy.RefreshActiveView()
+
+            lm.create_layout(page_id)
