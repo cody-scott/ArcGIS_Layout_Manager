@@ -51,7 +51,7 @@ or using arcpy.mapping.MapDocument class
 
     from ArcGIS_Layout_Manager import LayoutManager
     mxd = already started arcpy.mapping.MapDocument
-    lm = LayoutManage(mxd=mxd)
+    lm = LayoutManager(mxd=mxd)
 
 A layout.json file is created within the same folder as the map document taking the map document name as the beginning
 Using the above example, the file would be called sample_layout.json in the folder
