@@ -77,18 +77,18 @@ class LayoutManager(object):
             mxd = kwargs.get("mxd")
             mxd_path = kwargs.get("mxd_path")
 
-            logging.info("starting layout mapper")
+            self.log_or_print("starting layout mapper", logging.info)
 
             if type(mxd) == arcpy.mapping.MapDocument:
-                logging.info("Using supplied MXD")
+                self.log_or_print("Using supplied MXD", logging.info)
                 self._mxd = mxd
             else:
                 if mxd_path is None:
-                    logging.info("Using \"CURRENT\" map document")
+                    self.log_or_print("Using \"CURRENT\" map document", logging.info)
                     self._mxd = arcpy.mapping.MapDocument("CURRENT")
                     self._within_arcmap = True
                 elif os.path.isfile(mxd_path):
-                    logging.info("Using map document from {}".format(mxd_path))
+                    self.log_or_print("Using map document from {}".format(mxd_path), logging.info)
                     self._mxd = arcpy.mapping.MapDocument(mxd_path)
                 else:
                     raise exceptions.MXD_ERROR()
@@ -104,8 +104,8 @@ class LayoutManager(object):
                 self.auto_save = True
 
         except exceptions.MXD_ERROR as mxd_error:
-            logging.error("Error activating MXD")
-            logging.error("Confirm MXD Path and re-init")
+            self.log_or_print("Error activating MXD", logging.error)
+            self.log_or_print("Confirm MXD Path and re-init", logging.error)
         except Exception as e:
             logging.error(e.message)
 
@@ -113,7 +113,7 @@ class LayoutManager(object):
         del(self._mxd)
 
     def _get_mxd_source_path(self):
-        logging.info("Getting MXD Name and Source Path")
+        self.log_or_print("Getting MXD Name and Source Path", logging.info)
         mxd_file_path = self._mxd.filePath
         mxd_source = self._mxd.filePath.replace("\\{}".format(mxd_file_path.split("\\")[-1]), "")
         self._mxd_source_path = mxd_source
@@ -124,7 +124,7 @@ class LayoutManager(object):
 
     def _activate_mapper(self):
         if self._is_active:
-            logging.warning("Mapper already active")
+            self.log_or_print("Mapper already active", logging.warning)
 
         self._get_mxd_source_path()
 
@@ -136,7 +136,7 @@ class LayoutManager(object):
         return
 
     def _read_layout(self):
-        logging.info("Loading layout JSON")
+        self.log_or_print("Loading layout JSON", logging.info)
         data = None
         with open(self._layout_json_path, 'r') as fl:
             data = json.loads(fl.read())
@@ -173,7 +173,7 @@ class LayoutManager(object):
 
     def save_layout_json(self):
         self._get_mxd_source_path()
-        logging.info("Saving layout JSON to {}".format(self._layout_json_path))
+        self.log_or_print("Saving layout JSON to {}".format(self._layout_json_path), logging.info)
         out_data = []
         for item_name in self._layouts:
             item = self._layouts[item_name]
@@ -210,7 +210,7 @@ class LayoutManager(object):
             if layout_name in self._get_layouts():
                 raise exceptions.LayoutExists()
 
-            logging.info("Creating new layout \"{}\"".format(layout_name))
+            self.log_or_print("Creating new layout \"{}\"".format(layout_name), logging.info)
             new_layout = self._generate_layout(layout_name)
             self._layouts[new_layout.get('layout_name')] = new_layout
             self.active_layout = layout_name
@@ -219,7 +219,7 @@ class LayoutManager(object):
                 self.save_layout_json()
 
         except exceptions.LayoutExists as le:
-            logging.error("Layout \"{}\" Exists - Choose a new name".format(layout_name))
+            self.log_or_print("Layout \"{}\" Exists - Choose a new name".format(layout_name), logging.error)
 
     def _generate_layout(self, layout_name):
         toc_items = self._get_table_of_contents()
@@ -256,10 +256,10 @@ class LayoutManager(object):
 
     def _check_unique_name(self, name, existing_names):
         if name in existing_names or name is None or name == "":
-            logging.info("{} not unique".format(name))
+            self.log_or_print("{} not unique".format(name), logging.info)
             return False
         else:
-            logging.info("{} unique".format(name))
+            self.log_or_print("{} unique".format(name), logging.info)
             return True
 
     def _create_unique_name(self, base_type, existing_names):
@@ -271,7 +271,7 @@ class LayoutManager(object):
         return name
 
     def _get_table_of_contents(self):
-        logging.info("Generating Table of contents")
+        self.log_or_print("Generating Table of contents", logging.info)
         layers = {}
         for lyr in arcpy.mapping.ListLayers(self._mxd):
             item = table_of_contents_elements.TableOfContentsItem(lyr)
@@ -284,7 +284,7 @@ class LayoutManager(object):
                 self.update_layout()
                 self.save_layout_json()
 
-            logging.info("Switching Layout to {}".format(new_layout))
+            self.log_or_print("Switching Layout to {}".format(new_layout), logging.info)
             layout_data = self._layouts.get(new_layout)
             if layout_data is None:
                 raise exceptions.MissingLayout()
@@ -294,27 +294,27 @@ class LayoutManager(object):
             toc_items = layout_data.get('toc_items')
 
             if self.lyr_active:
-                logging.info("Updating Layout properties")
+                self.log_or_print("Updating Layout properties", logging.info)
                 for item in arcpy.mapping.ListLayoutElements(self._mxd):
                     layout_element = layout_items.get(item.type, {}).get(item.name, None)
                     if layout_element is not None:
                         layout_element.update_map_feature(item)
                     else:
                         if self.move_missing_off_screen:
-                            logging.warning('"{}" not found. Moving off screen'.format(item.name))
+                            self.log_or_print('"{}" not found. Moving off screen'.format(item.name), logging.warning)
                             max_x = self._mxd.pageSize.width + item.elementPositionX + 20
                             item.elementPositionX = max_x
                         else:
-                            logging.warning('"{}" not found.'.format(item.name))
+                            self.log_or_print('"{}" not found.'.format(item.name), logging.warning)
 
             if self.toc_active:
-                logging.info("Updating Table of Contents properties")
+                self.log_or_print("Updating Table of Contents properties", logging.info)
                 for item in arcpy.mapping.ListLayers(self._mxd):
                     toc_var = toc_items.get(item.longName, None)
                     if toc_var is not None:
                         toc_var.update_toc_feature(item)
                     else:
-                        logging.warning("TOC Item {} is not found in layout manager".format(item.longName))
+                        self.log_or_print("TOC Item {} is not found in layout manager".format(item.longName), logging.warning)
 
 
             if self._within_arcmap:
@@ -322,9 +322,9 @@ class LayoutManager(object):
                 arcpy.RefreshActiveView()
 
         except exceptions.MissingLayout as ml:
-            logging.error("Layout \"{}\" doesnt exists - please create or check".format(new_layout))
+            self.log_or_print("Layout \"{}\" doesnt exists - please create or check".format(new_layout), logging.error)
         except Exception as e:
-            logging.error(e.message)
+            self.log_or_print(e.message, logging.error)
 
     def update_layout(self, layout_name=None):
         try:
@@ -339,7 +339,7 @@ class LayoutManager(object):
                 self.save_layout_json()
 
         except Exception as e:
-            logging.error(e.message)
+            self.log_or_print(e.message, logging.error)
 
     def _get_layouts(self):
         layout_list = []
@@ -350,5 +350,21 @@ class LayoutManager(object):
     def list_layouts(self):
         layout_list = self._get_layouts()
         outstr = "\n".join(layout_list)
-        logging.info(outstr)
+        self.log_or_print(outstr, logging.info)
         return layout_list
+
+    def log_or_print(self, message, log_item):
+        """
+        Fire log message and print within arcmap
+        Arcmap doesn't seem to display messages from logging
+        :param message: message to log
+        :type message:
+        :param log_item: logging method
+        :type log_item:
+        :return:
+        :rtype:
+        """
+        if self._within_arcmap:
+            print(message)
+        else:
+            log_item(message)
